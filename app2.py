@@ -7,7 +7,7 @@ def apply_glass_style():
 
         html, body, [class*="css"]  {
             font-family: 'Inter', sans-serif;
-            background-color: #e6ebf1;
+            background-color: #f8f8ff ;
         }
 
         .glass-container {
@@ -29,7 +29,7 @@ def apply_glass_style():
 
 st.set_page_config(
     page_title="Universal Unit Converter",
-    page_icon="🔄",
+    page_icon="",
     layout="centered",
     initial_sidebar_state="collapsed",
 )
