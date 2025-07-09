@@ -27,6 +27,13 @@ def apply_glass_style():
         </style>
     """, unsafe_allow_html=True)
 
+st.set_page_config(
+    page_title="Universal Unit Converter",
+    page_icon="🔄",
+    layout="centered",
+    initial_sidebar_state="collapsed",
+)
+
 
 # --- Conversion Dictionaries ---
 VOLUME_CONVERSIONS = {
