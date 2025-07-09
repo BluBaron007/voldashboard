@@ -1,5 +1,33 @@
 import streamlit as st
 
+def apply_glass_style():
+    st.markdown("""
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+        html, body, [class*="css"]  {
+            font-family: 'Inter', sans-serif;
+            background-color: #e6ebf1;
+        }
+
+        .glass-container {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        h1, h2, h3 {
+            color: #222222;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+
 # --- Conversion Dictionaries ---
 VOLUME_CONVERSIONS = {
     'mL': 1.0, 'L': 1000.0, 'µL': 0.001, 'dL': 100.0, 'fl oz': 29.5735,
