@@ -30,6 +30,7 @@ def apply_glass_style():
         h1, h2, h3 {
             color: #1e3a8a;
             font-weight: 600;
+            text-align: center;
         }
         
         button, .stButton>button {
@@ -54,7 +55,6 @@ st.set_page_config(
     layout="centered",
     initial_sidebar_state="collapsed",
 )
-
 # --- Conversion Dictionaries ---
 VOLUME_CONVERSIONS = {
     'mL': 1.0, 'L': 1000.0, 'µL': 0.001, 'dL': 100.0, 'fl oz': 29.5735,
