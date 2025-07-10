@@ -167,9 +167,8 @@ def convert_units(value, unit_from, unit_to, density=1.0):
         return f"Invalid input: {str(e)}"
 
 # Main content
-st.markdown("<div class='glass-container'>", unsafe_allow_html=True)
 st.markdown("<h1>UnitSwap: Instant Converter</h1>", unsafe_allow_html=True)
-st.write("Instantly swap metric mass and volume units to measurements with this user-friendly tool. Enter density for precise culinary conversions! 🚀")
+st.write("Instantly swap metric mass and volume units to measurements with this user-friendly tool. Density needed for precise vol -> measure conversions!")
 
 # Unit converter UI
 st.subheader("Mass and Volume Converter")
