@@ -5,6 +5,26 @@ import logging
 logging.basicConfig(filename='converter_errors.log', level=logging.ERROR, 
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
+# Define unit conversion factors and culinary units globally
+mass_units = {
+    "Milligram": 0.001,  # to grams
+    "Gram": 1.0,
+    "Kilogram": 1000.0
+}
+volume_units = {
+    "Liter": 1000.0,  # to milliliters
+    "Milliliter": 1.0,
+    "Cubic Meter": 1000000.0,
+    "Gallon (US)": 3785.41,
+    "Gallon (UK)": 4546.09,
+    "Cubic Foot": 28316.8,
+    "Cup": 240.0,
+    "Tablespoon": 15.0,
+    "Teaspoon": 5.0,
+    "Fluid Ounce": 30.0
+}
+culinary_units = ["Cup", "Tablespoon", "Teaspoon", "Fluid Ounce"]
+
 def apply_glass_style():
     st.markdown("""
         <style>
@@ -101,25 +121,6 @@ apply_glass_style()
 
 # Conversion logic
 def convert_units(value, unit_from, unit_to, density=1.0):
-    # Conversion factors
-    mass_units = {
-        "Milligram": 0.001,  # to grams
-        "Gram": 1.0,
-        "Kilogram": 1000.0
-    }
-    volume_units = {
-        "Liter": 1000.0,  # to milliliters
-        "Milliliter": 1.0,
-        "Cubic Meter": 1000000.0,
-        "Gallon (US)": 3785.41,
-        "Gallon (UK)": 4546.09,
-        "Cubic Foot": 28316.8,
-        "Cup": 240.0,
-        "Tablespoon": 15.0,
-        "Teaspoon": 5.0,
-        "Fluid Ounce": 30.0
-    }
-    
     try:
         value = float(value)
         if value < 0:
@@ -127,13 +128,11 @@ def convert_units(value, unit_from, unit_to, density=1.0):
             return "Value must be non-negative"
         if unit_from == unit_to:
             return value
-        if density <= 0 and (unit_from in ["Cup", "Tablespoon", "Teaspoon", "Fluid Ounce"] or 
-                             unit_to in ["Cup", "Tablespoon", "Teaspoon", "Fluid Ounce"] or 
+        if density <= 0 and (unit_from in culinary_units or unit_to in culinary_units or 
                              unit_from in mass_units or unit_to in mass_units):
             logging.error(f"Invalid density: {density} for units {unit_from} to {unit_to}")
             return "Density must be greater than zero for culinary or mass-volume conversions"
             
-        culinary_units = ["Cup", "Tablespoon", "Teaspoon", "Fluid Ounce"]
         mass_to_mass = unit_from in mass_units and unit_to in mass_units
         volume_to_volume = unit_from in volume_units and unit_to in volume_units
         mass_to_volume = unit_from in mass_units and unit_to in volume_units
@@ -181,8 +180,6 @@ unit_from = st.selectbox("From Unit", all_units, help="Select the source unit (e
 unit_to = st.selectbox("To Unit", all_units, help="Select the target unit (e.g., Cup, Kilogram, Milliliter)")
 
 # Conditional density input
-culinary_units = ["Cup", "Tablespoon", "Teaspoon", "Fluid Ounce"]
-mass_units = ["Milligram", "Gram", "Kilogram"]
 density = 1.0  # Default density
 if (unit_from in culinary_units or unit_to in culinary_units or 
     (unit_from in mass_units and unit_to in volume_units) or 
@@ -204,4 +201,4 @@ if st.button("Convert Now"):
 st.markdown("</div>", unsafe_allow_html=True)
 
 # Footer
-st.markdown("<div class='footer'>Made with ❤️ using Streamlit</div>", unsafe_allow_html=True)
+st.markdown("<div class='footer'>Made By Jalen Claytor</div>", unsafe_allow_html=True)
