@@ -1,4 +1,9 @@
 import streamlit as st
+import logging
+
+# Configure logging for debugging (especially for Streamlit Cloud)
+logging.basicConfig(filename='converter_errors.log', level=logging.ERROR, 
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 def apply_glass_style():
     st.markdown("""
@@ -118,9 +123,15 @@ def convert_units(value, unit_from, unit_to, density=1.0):
     try:
         value = float(value)
         if value < 0:
+            logging.error(f"Negative value input: {value}")
             return "Value must be non-negative"
         if unit_from == unit_to:
             return value
+        if density <= 0 and (unit_from in ["Cup", "Tablespoon", "Teaspoon", "Fluid Ounce"] or 
+                             unit_to in ["Cup", "Tablespoon", "Teaspoon", "Fluid Ounce"] or 
+                             unit_from in mass_units or unit_to in mass_units):
+            logging.error(f"Invalid density: {density} for units {unit_from} to {unit_to}")
+            return "Density must be greater than zero for culinary or mass-volume conversions"
             
         culinary_units = ["Cup", "Tablespoon", "Teaspoon", "Fluid Ounce"]
         mass_to_mass = unit_from in mass_units and unit_to in mass_units
@@ -152,12 +163,14 @@ def convert_units(value, unit_from, unit_to, density=1.0):
             converted_value = target_volume_ml / volume_units[unit_to]
             
         return round(converted_value, 4)
-    except (ValueError, KeyError):
-        return "Invalid input"
+    except (ValueError, KeyError) as e:
+        logging.error(f"Conversion error: {str(e)}, Input: {value}, From: {unit_from}, To: {unit_to}, Density: {density}")
+        return f"Invalid input: {str(e)}"
 
 # Main content
+st.markdown("<div class='glass-container'>", unsafe_allow_html=True)
 st.markdown("<h1>UnitSwap: Instant Converter</h1>", unsafe_allow_html=True)
-st.write("Instantly swap metric mass and volume units to measurements with this user-friendly tool. Enter density for precise culinary conversions! ")
+st.write("Instantly swap metric mass and volume units to measurements with this user-friendly tool. Enter density for precise culinary conversions! 🚀")
 
 # Unit converter UI
 st.subheader("Mass and Volume Converter")
