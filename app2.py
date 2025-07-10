@@ -1,7 +1,7 @@
 import streamlit as st
 import logging
 
-# Configure logging for debugging (especially for Streamlit Cloud)
+# Configure logging for debugging
 logging.basicConfig(filename='converter_errors.log', level=logging.ERROR, 
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -172,7 +172,7 @@ st.markdown("<h1>UnitSwap: Instant Converter</h1>", unsafe_allow_html=True)
 
 
 # Unit converter UI
-st.subheader("Mass and Volume Converter")
+st.subheader("Mass & Volume Converter")
 value = st.text_input("Enter Value", "0", help="Enter a mass or volume (e.g., 1 for 1 Liter or 1 Gram)")
 all_units = ["Milligram", "Gram", "Kilogram", "Liter", "Milliliter", "Cubic Meter", 
              "Gallon (US)", "Gallon (UK)", "Cubic Foot", "Cup", "Tablespoon", "Teaspoon", "Fluid Ounce"]
