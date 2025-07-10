@@ -49,12 +49,11 @@ def apply_glass_style():
         """, unsafe_allow_html=True)
 
 st.set_page_config(
-    page_title="Universal Unit Converter",
+    page_title="UnitSwap: Instant Converter",
     page_icon="🌐",
     layout="centered",
     initial_sidebar_state="collapsed",
 )
-
 
 # --- Conversion Dictionaries ---
 VOLUME_CONVERSIONS = {
@@ -131,7 +130,7 @@ def convert_mass_to_volume(mass_value, mass_unit, density_value, density_unit, t
     return volume_ml / VOLUME_CONVERSIONS[target_volume_unit]
 
 # --- Streamlit Interface ---
-st.title("🔄 Universal Unit Converter")
+st.title("Universal Unit Converter")
 
 conversion_type = st.selectbox("Choose conversion type", [
     "Volume", "Mass", "Concentration", "Density", "Volume ↔ Mass"
