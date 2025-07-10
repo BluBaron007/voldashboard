@@ -140,7 +140,6 @@ def convert_volume(value, unit_from, unit_to, density=1.0):
         return "Invalid input"
 
 # Main content
-st.markdown("<div class='glass-container'>", unsafe_allow_html=True)
 st.markdown("<h1>UnitSwap: Instant Volume Converter</h1>", unsafe_allow_html=True)
 st.write("Instantly swap metric and other volume units to measurements with this user-friendly tool. Enter density for precise culinary conversions! 🚀")
 
