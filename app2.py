@@ -3,58 +3,117 @@ import streamlit as st
 def apply_glass_style():
     st.markdown("""
         <style>
-        html, body, [class*="css"]  {
-            font-family: 'Inter', 'Helvetica Neue', sans-serif;
-            background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
-            color: #1f2a44;
+        html, body, [class*="css"] {
+            font-family: 'Roboto', 'Inter', sans-serif;
+            background: linear-gradient(135deg, #d6eaff 0%, #f0e7ff 100%);
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
         }
         
         .glass-container {
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 2rem;
-            margin: 1rem auto;
-            max-width: 800px;
-            transition: all 0.3s ease-in-out;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 2.5rem;
+            margin: 2rem auto;
+            max-width: 700px;
+            transition: all 0.3s ease;
         }
         
         .glass-container:hover {
-            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.2);
-            transform: translateY(-2px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px);
         }
         
-        h1, h2, h3 {
-            color: #1e3a8a;
+        h1 {
+            color: #1e40af;
+            font-weight: 700;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+        
+        h2, h3 {
+            color: #1e40af;
             font-weight: 600;
             text-align: center;
         }
         
-        button, .stButton>button {
-            background: #4f46e5;
+        .stButton>button {
+            background: #3b82f6;
             color: white;
-            border-radius: 8px;
-            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            padding: 0.8rem 1.8rem;
             border: none;
-            transition: background 0.2s ease;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            width: 100%;
+            box-sizing: border-box;
         }
         
-        button:hover, .stButton>button:hover {
-            background: #6366f1;
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        .stButton>button:hover {
+            background: #2563eb;
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+            transform: translateY(-1px);
+        }
+        
+        .stTextInput>div>input, .stSelectbox>div>select {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 0.8rem;
+            font-size: 1rem;
+            color: #1e293b;
+        }
+        
+        .stTextInput>label, .stSelectbox>label {
+            color: #1e40af;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+        
+        .footer {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 2rem;
         }
         </style>
         """, unsafe_allow_html=True)
 
+# Page configuration
 st.set_page_config(
     page_title="UnitSwap: Instant Converter",
     page_icon="🌐",
     layout="centered",
     initial_sidebar_state="collapsed",
 )
+
+# Apply custom styles
+apply_glass_style()
+
+# Main content
+st.markdown("<div class='glass-container'>", unsafe_allow_html=True)
+st.markdown("<h1>UnitSwap: Instant Converter</h1>", unsafe_allow_html=True)
+st.write("Convert units instantly with ease. Select a category, enter a value, and get results in real-time! 🚀")
+
+# Sample unit converter UI
+category = st.selectbox("Unit Category", ["Length", "Weight", "Temperature", "Volume"])
+value = st.text_input("Enter Value", "0")
+unit_from = st.selectbox("From Unit", ["Meter", "Kilometer", "Mile"] if category == "Length" else ["Kilogram", "Pound"])
+unit_to = st.selectbox("To Unit", ["Meter", "Kilometer", "Mile"] if category == "Length" else ["Kilogram", "Pound"])
+if st.button("Convert"):
+    st.write(f"Result: {value} {unit_from} = [Converted Value] {unit_to}")
+
+st.markdown("</div>", unsafe_allow_html=True)
+
+# Footer
+st.markdown("<div class='footer'>Made with ❤️ using Streamlit</div>", unsafe_allow_html=True)
 # --- Conversion Dictionaries ---
 VOLUME_CONVERSIONS = {
     'mL': 1.0, 'L': 1000.0, 'µL': 0.001, 'dL': 100.0, 'fl oz': 29.5735,
