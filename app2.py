@@ -163,4 +163,4 @@ if st.button("Convert Now"):
 st.markdown("</div>", unsafe_allow_html=True)
 
 # Footer
-st.markdown("<div class='footer'>Made By Jalen Claytor/div>", unsafe_allow_html=True)
+st.markdown("<div class='footer'>Made By Jalen Claytor<div>", unsafe_allow_html=True)
