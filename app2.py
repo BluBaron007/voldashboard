@@ -3,33 +3,54 @@ import streamlit as st
 def apply_glass_style():
     st.markdown("""
         <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-
         html, body, [class*="css"]  {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8f8ff ;
+            font-family: 'Inter', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+            color: #1f2a44;
         }
-
+        
         .glass-container {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
             border-radius: 16px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 2rem;
-            margin-top: 2rem;
+            margin: 1rem auto;
+            max-width: 800px;
+            transition: all 0.3s ease-in-out;
         }
-
+        
+        .glass-container:hover {
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.2);
+            transform: translateY(-2px);
+        }
+        
         h1, h2, h3 {
-            color: #222222;
+            color: #1e3a8a;
+            font-weight: 600;
+        }
+        
+        button, .stButton>button {
+            background: #4f46e5;
+            color: white;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            transition: background 0.2s ease;
+        }
+        
+        button:hover, .stButton>button:hover {
+            background: #6366f1;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
         }
         </style>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
 
 st.set_page_config(
     page_title="Universal Unit Converter",
-    page_icon="",
+    page_icon="🌐",
     layout="centered",
     initial_sidebar_state="collapsed",
 )
