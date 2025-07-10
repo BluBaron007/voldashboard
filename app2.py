@@ -12,12 +12,9 @@ def apply_glass_style():
         }
         
         .glass-container {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
             padding: 2.5rem;
             margin: 2rem auto;
             max-width: 700px;
@@ -25,8 +22,8 @@ def apply_glass_style():
         }
         
         .glass-container:hover {
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
-            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
         }
         
         h1 {
@@ -63,7 +60,7 @@ def apply_glass_style():
         }
         
         .stTextInput>div>input, .stSelectbox>div>select {
-            background: rgba(255, 255, 255, 0.8);
+            background: #f8fafc;
             border: 1px solid rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             padding: 0.8rem;
@@ -98,24 +95,46 @@ st.set_page_config(
 apply_glass_style()
 
 # Conversion logic for volume units
-def convert_volume(value, unit_from, unit_to):
-    # Conversion factors to liters (base unit)
+def convert_volume(value, unit_from, unit_to, density=1.0):
+    # Conversion factors to milliliters (base unit)
     volume_units = {
-        "Liter": 1.0,
-        "Milliliter": 0.001,
-        "Gallon (US)": 3.78541,
-        "Gallon (UK)": 4.54609,
-        "Cubic Meter": 1000.0,
-        "Cubic Foot": 28.3168
+        "Liter": 1000.0,
+        "Milliliter": 1.0,
+        "Cubic Meter": 1000000.0,
+        "Gallon (US)": 3785.41,
+        "Gallon (UK)": 4546.09,
+        "Cubic Foot": 28316.8,
+        "Cup": 240.0,
+        "Tablespoon": 15.0,
+        "Teaspoon": 5.0,
+        "Fluid Ounce": 30.0
     }
     
     try:
         value = float(value)
+        if value < 0:
+            return "Value must be non-negative"
         if unit_from == unit_to:
             return value
-        # Convert from source unit to liters, then to target unit
-        value_in_liters = value * volume_units[unit_from]
-        converted_value = value_in_liters / volume_units[unit_to]
+        if unit_from in ["Cup", "Tablespoon", "Teaspoon", "Fluid Ounce"]:
+            # Convert measurement to mass (grams) using density
+            volume_ml = value * volume_units[unit_from]
+            mass_g = volume_ml * density
+            # Convert mass to target volume (mL) using density, then to target unit
+            target_volume_ml = mass_g / density
+            converted_value = target_volume_ml / volume_units[unit_to]
+        else:
+            # Convert source volume to milliliters
+            volume_ml = value * volume_units[unit_from]
+            if unit_to in ["Cup", "Tablespoon", "Teaspoon", "Fluid Ounce"]:
+                # Convert to mass (grams) using density
+                mass_g = volume_ml * density
+                # Convert mass to target volume (mL) using density
+                target_volume_ml = mass_g / density
+                converted_value = target_volume_ml / volume_units[unit_to]
+            else:
+                # Standard volume-to-volume conversion
+                converted_value = volume_ml / volume_units[unit_to]
         return round(converted_value, 4)
     except (ValueError, KeyError):
         return "Invalid input"
@@ -123,22 +142,37 @@ def convert_volume(value, unit_from, unit_to):
 # Main content
 st.markdown("<div class='glass-container'>", unsafe_allow_html=True)
 st.markdown("<h1>UnitSwap: Instant Converter</h1>", unsafe_allow_html=True)
-st.write("Convert volume units instantly with ease. Enter a value, select units, and get results in real-time! 🚀")
+st.write("Instantly swap metric volumes to culinary measurements with this user-friendly tool. Select a substance for precise conversions based on density! 🚀")
 
 # Unit converter UI
-st.subheader("Volume Converter")
-volume_units = ["Liter", "Milliliter", "Gallon (US)", "Gallon (UK)", "Cubic Meter", "Cubic Foot"]
-value = st.text_input("Enter Value", "0")
-unit_from = st.selectbox("From Unit", volume_units)
-unit_to = st.selectbox("To Unit", volume_units)
+st.subheader("Metric Volume to Measurement Converter")
+substances = {
+    "Water": 1.0,
+    "All-Purpose Flour": 0.53,
+    "Granulated Sugar": 0.85,
+    "Olive Oil": 0.92,
+    "Milk": 1.03,
+    "Custom": None
+}
+substance = st.selectbox("Select Substance for Accurate Conversion", list(substances.keys()))
+density = substances[substance]
+if substance == "Custom":
+    density = st.number_input("Enter Density (g/mL)", min_value=0.0, value=1.0, step=0.01)
+
+volume_units = ["Liter", "Milliliter", "Cubic Meter"]
+measurement_units = ["Cup", "Tablespoon", "Teaspoon", "Fluid Ounce"]
+all_units = volume_units + measurement_units
+value = st.text_input("Enter Volume Value", "0")
+unit_from = st.selectbox("From Metric Unit", all_units)
+unit_to = st.selectbox("To Unit", all_units)
 if st.button("Convert"):
-    result = convert_volume(value, unit_from, unit_to)
+    result = convert_volume(value, unit_from, unit_to, density)
     if isinstance(result, str):
         st.error(result)
     else:
-        st.success(f"{value} {unit_from} = {result} {unit_to}")
+        st.success(f"{value} {unit_from} = {result} {unit_to} (for {substance})")
 
 st.markdown("</div>", unsafe_allow_html=True)
 
 # Footer
-st.markdown("<div class='footer'>Made By Jalen Claytor</div>", unsafe_allow_html=True)
+st.markdown("<div class='footer'>Made with ❤️ using Streamlit</div>", unsafe_allow_html=True)
