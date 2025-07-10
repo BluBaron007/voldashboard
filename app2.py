@@ -116,63 +116,51 @@ def convert_volume(value, unit_from, unit_to, density=1.0):
             return "Value must be non-negative"
         if unit_from == unit_to:
             return value
-        if unit_from in ["Cup", "Tablespoon", "Teaspoon", "Fluid Ounce"]:
-            # Convert measurement to mass (grams) using density
+        culinary_units = ["Cup", "Tablespoon", "Teaspoon", "Fluid Ounce"]
+        if unit_from in culinary_units or unit_to in culinary_units:
+            # Density-based conversion for culinary units
             volume_ml = value * volume_units[unit_from]
-            mass_g = volume_ml * density
-            # Convert mass to target volume (mL) using density, then to target unit
-            target_volume_ml = mass_g / density
-            converted_value = target_volume_ml / volume_units[unit_to]
-        else:
-            # Convert source volume to milliliters
-            volume_ml = value * volume_units[unit_from]
-            if unit_to in ["Cup", "Tablespoon", "Teaspoon", "Fluid Ounce"]:
-                # Convert to mass (grams) using density
+            if unit_from in culinary_units:
+                # Convert measurement to mass (grams) using density
                 mass_g = volume_ml * density
                 # Convert mass to target volume (mL) using density
                 target_volume_ml = mass_g / density
                 converted_value = target_volume_ml / volume_units[unit_to]
             else:
-                # Standard volume-to-volume conversion
-                converted_value = volume_ml / volume_units[unit_to]
+                # Convert source volume to mass (grams) using density
+                mass_g = volume_ml * density
+                # Convert mass to target volume (mL) using density
+                target_volume_ml = mass_g / density
+                converted_value = target_volume_ml / volume_units[unit_to]
+        else:
+            # Standard volume-to-volume conversion (no density needed)
+            converted_value = (value * volume_units[unit_from]) / volume_units[unit_to]
         return round(converted_value, 4)
     except (ValueError, KeyError):
         return "Invalid input"
 
 # Main content
 st.markdown("<div class='glass-container'>", unsafe_allow_html=True)
-st.markdown("<h1>UnitSwap: Instant Converter</h1>", unsafe_allow_html=True)
-st.write("Instantly swap metric volumes to culinary measurements with this user-friendly tool. Select a substance for precise conversions based on density! 🚀")
+st.markdown("<h1>UnitSwap: Instant Volume Converter</h1>", unsafe_allow_html=True)
+st.write("Instantly swap metric and other volume units to measurements with this user-friendly tool. Enter density for precise culinary conversions! 🚀")
 
 # Unit converter UI
-st.subheader("Metric Volume to Measurement Converter")
-substances = {
-    "Water": 1.0,
-    "All-Purpose Flour": 0.53,
-    "Granulated Sugar": 0.85,
-    "Olive Oil": 0.92,
-    "Milk": 1.03,
-    "Custom": None
-}
-substance = st.selectbox("Select Substance for Accurate Conversion", list(substances.keys()))
-density = substances[substance]
-if substance == "Custom":
-    density = st.number_input("Enter Density (g/mL)", min_value=0.0, value=1.0, step=0.01)
+st.subheader("Volume to Measurement Converter")
+density = st.number_input("Enter Density (g/mL)", min_value=0.0, value=1.0, step=0.01, help="Enter the density of the substance (e.g., 1.0 for water, 0.53 for flour)")
 
-volume_units = ["Liter", "Milliliter", "Cubic Meter"]
-measurement_units = ["Cup", "Tablespoon", "Teaspoon", "Fluid Ounce"]
-all_units = volume_units + measurement_units
-value = st.text_input("Enter Volume Value", "0")
-unit_from = st.selectbox("From Metric Unit", all_units)
-unit_to = st.selectbox("To Unit", all_units)
-if st.button("Convert"):
+all_units = ["Liter", "Milliliter", "Cubic Meter", "Gallon (US)", "Gallon (UK)", "Cubic Foot", "Cup", "Tablespoon", "Teaspoon", "Fluid Ounce"]
+value = st.text_input("Enter Volume Value", "0", help="Enter a volume (e.g., 1 for 1 Liter)")
+unit_from = st.selectbox("From Volume Unit", all_units, help="Select the source unit (e.g., Liter, Cup)")
+unit_to = st.selectbox("To Volume Unit", all_units, help="Select the target unit (e.g., Cup, Milliliter)")
+if st.button("Convert Now"):
     result = convert_volume(value, unit_from, unit_to, density)
     if isinstance(result, str):
         st.error(result)
     else:
-        st.success(f"{value} {unit_from} = {result} {unit_to} (for {substance})")
+        density_note = f" (using density {density} g/mL)" if unit_from in ["Cup", "Tablespoon", "Teaspoon", "Fluid Ounce"] or unit_to in ["Cup", "Tablespoon", "Teaspoon", "Fluid Ounce"] else ""
+        st.success(f"{value} {unit_from} = {result} {unit_to}{density_note}")
 
 st.markdown("</div>", unsafe_allow_html=True)
 
 # Footer
-st.markdown("<div class='footer'>Made with ❤️ using Streamlit</div>", unsafe_allow_html=True)
+st.markdown("<div class='footer'>Made By Jalen Claytor/div>", unsafe_allow_html=True)
